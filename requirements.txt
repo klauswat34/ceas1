@@ -1,7 +1,7 @@
 pandas
 numpy
-scikit-learn==1.6.1
-lightgbm==4.3.0
+scikit-learn
+lightgbm
 kiteconnect
 pytz
 requests
