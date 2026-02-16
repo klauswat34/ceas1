@@ -1039,9 +1039,14 @@ def main():
         try:
 
             if DEBUG:
+                print("Loop running...")
                 run_cycle(kite, MODELS, tokens)
+                print("Loop running...")
+
                 break
             else:
+                print("Loop running...")
+
                 run_cycle(kite, MODELS, tokens)
                 sleep_to_next_bar()
 
