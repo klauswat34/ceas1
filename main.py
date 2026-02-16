@@ -1026,7 +1026,6 @@ def minute_of_day(ts):
 # ============================================================
 # MAIN
 # ============================================================
-
 def main():
     global GLOBAL_BUFFER
 
@@ -1037,27 +1036,31 @@ def main():
 
     while True:
         try:
+            print("Loop running...")
 
-            if DEBUG:
-                print("Loop running...")
-                run_cycle(kite, MODELS, tokens)
-                print("Loop running...")
+            if not market_open():
+                print("Market closed. Sleeping 60s.")
+                time.sleep(60)
+                continue
 
-                break
-            else:
-                print("Loop running...")
-
-                run_cycle(kite, MODELS, tokens)
-                sleep_to_next_bar()
+            run_cycle(kite, MODELS, tokens)
+            sleep_to_next_bar()
 
         except Exception:
             err = traceback.format_exc()
+            print("SYSTEM ERROR:")
             print(err)
-            send_telegram(f"🚨 SYSTEM CRASH\n{err[:3000]}")
+
+            try:
+                send_telegram(f"🚨 SYSTEM CRASH\n{err[:3000]}")
+            except:
+                pass
+
             time.sleep(30)
 
 
 if __name__ == "__main__":
-       main()
+    main()
+
 
 
