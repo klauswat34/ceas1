@@ -1,3 +1,9 @@
+print("FILE STARTED")
+
+import sklearn
+print("SKLEARN VERSION:", sklearn.__version__)
+
+
 import os
 from datetime import datetime, timedelta
 import numpy as np
@@ -1022,16 +1028,24 @@ def minute_of_day(ts):
     return ts.hour * 60 + ts.minute
 
 
-
 # ============================================================
 # MAIN
 # ============================================================
+
 def main():
     global GLOBAL_BUFFER
 
+    print("ENTERED MAIN")
+
     kite = kite_login()
+    print("KITE LOGIN DONE")
+
     tokens = resolve_tokens(kite)
+    print("TOKENS RESOLVED")
+
     MODELS = load_models()
+    print("MODELS LOADED")
+
     send_telegram("🟢 Railway bot started")
 
     while True:
@@ -1061,6 +1075,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
