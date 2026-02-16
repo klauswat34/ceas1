@@ -1,9 +1,3 @@
-print("FILE STARTED")
-
-import sklearn
-print("SKLEARN VERSION:", sklearn.__version__)
-
-
 import os
 from datetime import datetime, timedelta
 import numpy as np
@@ -29,16 +23,16 @@ VWAP_BASE = 1046718831.4499975
 
 IST = pytz.timezone("Asia/Kolkata")
 
-#TELEGRAM_BOT_TOKEN = "bot8527999481:AAEyH2748Wj_9KhypqlwIycJpEPkzX8nJCE"
-#TELEGRAM_CHAT_ID = 6716775488
+TELEGRAM_BOT_TOKEN = "bot8527999481:AAEyH2748Wj_9KhypqlwIycJpEPkzX8nJCE"
+TELEGRAM_CHAT_ID = 6716775488
 
-#KITE_API_KEY = "m90wl78wn764217q"
-#KITE_API_SECRET = "foczp8ktwodnbmdsn1ri9avj7m58ad55"
+KITE_API_KEY = "m90wl78wn764217q"
+KITE_API_SECRET = "foczp8ktwodnbmdsn1ri9avj7m58ad55"
 
-KITE_API_KEY = os.getenv("KITE_API_KEY")
-KITE_ACCESS_TOKEN = os.getenv("KITE_ACCESS_TOKEN")
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+#KITE_API_KEY = os.getenv("KITE_API_KEY")
+#KITE_ACCESS_TOKEN = os.getenv("KITE_ACCESS_TOKEN")
+#TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+#TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
@@ -1028,24 +1022,22 @@ def minute_of_day(ts):
     return ts.hour * 60 + ts.minute
 
 
+
 # ============================================================
 # MAIN
 # ============================================================
 
+
+
+# ============================================================
+# MAIN
+# ============================================================
 def main():
     global GLOBAL_BUFFER
 
-    print("ENTERED MAIN")
-
     kite = kite_login()
-    print("KITE LOGIN DONE")
-
     tokens = resolve_tokens(kite)
-    print("TOKENS RESOLVED")
-
     MODELS = load_models()
-    print("MODELS LOADED")
-
     send_telegram("🟢 Railway bot started")
 
     while True:
@@ -1075,3 +1067,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
