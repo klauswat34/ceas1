@@ -139,9 +139,25 @@ def send_telegram(msg):
 
 
 def kite_login():
+
     kite = KiteConnect(api_key=KITE_API_KEY)
-    kite.set_access_token(KITE_ACCESS_TOKEN)
+
+    print("\nOpen this URL in browser and login:\n")
+    print(kite.login_url())
+
+    request_token = input("\nPaste request_token here: ").strip()
+
+    data = kite.generate_session(
+        request_token,
+        api_secret=KITE_API_SECRET
+    )
+
+    kite.set_access_token(data["access_token"])
+
+    print("Logged in successfully.")
+
     return kite
+
 
 def market_open():
     now = datetime.now(IST)
