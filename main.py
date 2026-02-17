@@ -327,7 +327,8 @@ def run_cycle(kite, MODELS, tokens):
         print("Feature DF empty")
         return
 
-    last_row = feat_df.iloc[-1]
+    last_row = feat_df.iloc[[-1]]   # double brackets
+
 
 
 
