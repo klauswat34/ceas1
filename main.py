@@ -981,7 +981,10 @@ def fetch_equity_features(kite, pca,tokens):
         axis=1,
     )
 
+
     feats = feats.dropna()
+    feats.index = pd.to_datetime(feats.index)
+    feats.index = feats.index.tz_convert("Asia/Kolkata").tz_localize(None)
     feats.index = feats.index.floor("5min")
 
     return feats.tail(1)
