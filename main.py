@@ -355,7 +355,7 @@ def run_cycle(kite, MODELS, tokens):
     feature_row["exp_p"] = exp_p
     feature_row["p_up"] = p_up
     feature_row["p_down"] = p_down
-    feature_row["atr"] = last_row["atr"]
+    feature_row["atr"] = last_row["atr"].iloc[0]
     feature_row["side"] = side
 
     X_meta = pd.DataFrame([feature_row])[feature_cols]
@@ -383,7 +383,8 @@ def run_cycle(kite, MODELS, tokens):
 
     entry = hi_ref if side == 1 else lo_ref
 
-    atr = last_row["atr"]
+    atr = last_row["atr"].iloc[0]
+
 
     stop   = entry - side * STOP_R * atr
     target = entry + side * TARGET_R * atr
