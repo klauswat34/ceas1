@@ -295,7 +295,8 @@ def run_cycle(kite, MODELS, tokens):
 
 
 
-    nifty_df = pd.DataFrame([candle]).set_index("date")
+    nifty_df = candle.copy().set_index("date")
+
     nifty_df.index = nifty_df.index.floor("5min")
 
 
