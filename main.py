@@ -364,10 +364,24 @@ def run_cycle(kite, MODELS, tokens):
     feature_row["p_down"] = p_down
     feature_row["atr"] = last_row["atr"].iloc[0]
     feature_row["side"] = side
+    last_feat_row = feat_df.iloc[-1].copy()
 
-    X_meta_full = pd.DataFrame(feature_matrix)[feature_cols]
-    meta_probs = models["meta"].predict_proba(X_meta_full)
-    p_win = meta_probs[-1, 1]
+    meta_row = last_feat_row[EXP_FEATURES + DIR_FEATURES].to_dict()
+
+    meta_row["exp_p"] = exp_p
+    meta_row["p_up"] = p_up
+    meta_row["p_down"] = p_down
+    meta_row["atr"] = last_feat_row["atr"]
+    meta_row["side"] = side
+
+    X_meta = pd.DataFrame([meta_row])[feature_cols].values.astype(np.float32)
+
+    p_win = models["meta"].predict_proba(X_meta)[0, 1]
+
+
+#    X_meta_full = pd.DataFrame(feature_matrix)[feature_cols]
+#    meta_probs = models["meta"].predict_proba(X_meta_full)
+#    p_win = meta_probs[-1, 1]
 
     print("="*60)
     print(f"Time: {candle_time}")
@@ -879,7 +893,8 @@ def build_features(df):
 def prepare_features(df, feats):
     X = df.loc[:, feats].copy()
     X = X.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return np.array(X, dtype=np.float32).reshape(1, -1)
+    return X.values.astype(np.float32)
+
 
 
 
