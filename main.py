@@ -277,15 +277,15 @@ def run_cycle(kite, MODELS, tokens):
         print("No candle")
         return
 
-    candle_time = candle["date"].iloc[0]
+    candle_time = candle.iloc[0]["date"]
+    print(type(LAST_EXECUTED_CANDLE), type(candle_time))
 
 
-
-
-    # Prevent duplicate execution
-    if LAST_EXECUTED_CANDLE == candle_time:
+    if LAST_EXECUTED_CANDLE is not None:
+      if pd.Timestamp(LAST_EXECUTED_CANDLE) == pd.Timestamp(candle_time):
         print("Already executed this candle")
         return
+
 
 
 
