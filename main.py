@@ -334,6 +334,8 @@ def run_cycle(kite, MODELS, tokens):
 
 
     X_exp = prepare_features(last_row, EXP_FEATURES)
+    print("X_exp shape:", np.array(X_exp).shape)
+
     exp_p = models["exp"].predict_proba(X_exp)[0, 1]
 
 
@@ -871,20 +873,10 @@ def build_features(df):
 
 
 def prepare_features(df, feats):
-
-    # Always keep as DataFrame
-    if isinstance(df, pd.Series):
-        df = df.to_frame().T
-
     X = df.loc[:, feats].copy()
-
     X = X.replace([np.inf, -np.inf], np.nan).fillna(0)
+    return np.array(X, dtype=np.float32).reshape(1, -1)
 
-    # Guarantee 2D shape
-    if X.ndim == 1:
-        X = X.to_frame().T
-
-    return X
 
 
 
@@ -1130,6 +1122,9 @@ def minute_of_day(ts):
 # ============================================================
 def main():
     global GLOBAL_BUFFER
+    import os
+    print("RUNNING FILE:", os.path.abspath(__file__))
+
 
     kite = kite_login()
     tokens = resolve_tokens(kite)
