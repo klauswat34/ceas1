@@ -7,6 +7,15 @@ from sklearn.decomposition import PCA
 
 
 import time as _time
+time = _timeimport os
+from datetime import datetime, timedelta
+import numpy as np
+import json
+import traceback
+from sklearn.decomposition import PCA
+
+
+import time as _time
 time = _time
 
 import pandas as pd
@@ -70,6 +79,16 @@ GLOBAL_BUFFER = pd.read_csv(
     parse_dates=True,
     index_col=0
 )
+
+GLOBAL_BUFFER.index = pd.to_datetime(GLOBAL_BUFFER.index)
+
+try:
+    GLOBAL_BUFFER.index = GLOBAL_BUFFER.index.tz_convert("Asia/Kolkata")
+except:
+    pass
+
+GLOBAL_BUFFER.index = GLOBAL_BUFFER.index.tz_localize(None)
+
 
 LOG_FILE = "logs/live_predictions.csv"
 import requests
@@ -218,7 +237,13 @@ def fetch_latest_nifty_candle(kite, token):
     if t > datetime.strptime("15:25","%H:%M").time():
         return None
     
-    df["date"] = pd.to_datetime(df["date"]).dt.tz_convert("Asia/Kolkata").dt.tz_localize(None)
+    df["date"] = pd.to_datetime(df["date"])
+
+    if df["date"].dt.tz is not None:
+     df["date"] = df["date"].dt.tz_convert("Asia/Kolkata")
+
+    df["date"] = df["date"].dt.tz_localize(None)
+
 
     df = df.sort_values("date")
     last_row = df.iloc[-1]
@@ -981,13 +1006,18 @@ def fetch_equity_features(kite, pca,tokens):
         axis=1,
     )
 
-
     feats = feats.dropna()
     feats.index = pd.to_datetime(feats.index)
-    feats.index = feats.index.tz_convert("Asia/Kolkata").tz_localize(None)
+
+    if feats.index.tz is not None:
+      feats.index = feats.index.tz_convert("Asia/Kolkata")
+
+    feats.index = feats.index.tz_localize(None)
     feats.index = feats.index.floor("5min")
 
+
     return feats.tail(1)
+
 
 
 
@@ -1086,5 +1116,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
