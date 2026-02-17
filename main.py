@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 
 
 import time as _time
-time = _timeimport os
+time = _time
 from datetime import datetime, timedelta
 import numpy as np
 import json
