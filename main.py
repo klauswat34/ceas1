@@ -23,6 +23,7 @@ import joblib
 from kiteconnect import KiteConnect
 import os
 import pytz
+print("🔥 NEW VERSION CONFIRMED 🔥")
 
 
 VWAP_BASE = 1046718831.4499975
@@ -184,7 +185,7 @@ def market_open():
         return False
 
     start = datetime.strptime("09:15", "%H:%M").time()
-    end   = datetime.strptime("15:25", "%H:%M").time()
+    end   = datetime.strptime("16:25", "%H:%M").time()
 
     return start <= now.time() <= end
 
