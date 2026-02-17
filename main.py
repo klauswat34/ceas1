@@ -248,7 +248,7 @@ def fetch_latest_nifty_candle(kite, token):
 
 
     df = df.sort_values("date")
-    last_row = df.iloc[-1]
+    last_row = df.tail(1)
 
 
 
@@ -870,10 +870,15 @@ def build_features(df):
 
 def prepare_features(df, feats):
 
-    X = df[feats].copy()
-    X = X.replace([np.inf,-np.inf], np.nan)
+    X = df[feats]
+
+    if isinstance(X, pd.Series):
+        X = X.to_frame().T
+
+    X = X.replace([np.inf, -np.inf], np.nan)
 
     return X.fillna(0)
+
 
 
 def assert_features(df, cols):
