@@ -296,6 +296,15 @@ def run_cycle(kite, MODELS, tokens):
 
 
     nifty_df = pd.DataFrame([candle]).set_index("date")
+ #   nifty_df = pd.DataFrame([candle]).set_index("date")
+
+    nifty_df = nifty_df.rename(columns={
+     "open": "nifty_open",
+     "high": "nifty_high",
+     "low": "nifty_low",
+     "close": "nifty_close",
+     "volume": "nifty_volume"})
+
 
     new_row = nifty_df.join(eq_feats)
 
