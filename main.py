@@ -290,6 +290,8 @@ def run_cycle(kite, MODELS, tokens):
 
     # Fetch equity cross-sectional features
     eq_feats = fetch_equity_features(kite, MODELS["pca"], tokens)
+    print("eq_feats empty?", eq_feats.empty)
+
 
 
 
@@ -845,6 +847,12 @@ def build_features(df):
 
 
   df["atr"] = compute_atr(df)
+
+  print("Rows before dropna:", len(df))
+  print("Last row NaN count:", df.iloc[-1].isna().sum())
+  print("Columns with NaN in last row:",
+      df.columns[df.iloc[-1].isna()].tolist())
+
 
   return df.dropna()  
 
