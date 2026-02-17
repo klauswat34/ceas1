@@ -330,6 +330,9 @@ def run_cycle(kite, MODELS, tokens):
 
     # Prepare full matrix (no NaN rows already removed by dropna())
     X_exp_full = prepare_features(feat_df, EXP_FEATURES)
+    print("X_exp shape:", X_exp_full.shape)
+    print("X_exp ndim:", X_exp_full.ndim)
+
 
     # Predict on all rows
     exp_probs = models["exp"].predict_proba(X_exp_full)
@@ -364,7 +367,7 @@ def run_cycle(kite, MODELS, tokens):
     feature_row["p_down"] = p_down
     feature_row["atr"] = last_row["atr"].iloc[0]
     feature_row["side"] = side
-    last_feat_row = feat_df.iloc[-1].copy()
+    last_feat_row = feat_df.iloc[[-1]].copy()
 
     meta_row = last_feat_row[EXP_FEATURES + DIR_FEATURES].to_dict()
 
@@ -893,7 +896,16 @@ def build_features(df):
 def prepare_features(df, feats):
     X = df.loc[:, feats].copy()
     X = X.replace([np.inf, -np.inf], np.nan).fillna(0)
+
+    # FORCE 2D
+    if isinstance(X, pd.Series):
+        X = X.to_frame().T
+
+    if len(X.shape) == 1:
+        X = X.reshape(1, -1)
+
     return X.values.astype(np.float32)
+
 
 
 
