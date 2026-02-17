@@ -328,19 +328,23 @@ def run_cycle(kite, MODELS, tokens):
         print("Feature DF empty")
         return
 
-    last_row = feat_df.iloc[[-1]]   # double brackets
+    # Prepare full matrix (no NaN rows already removed by dropna())
+    X_exp_full = prepare_features(feat_df, EXP_FEATURES)
+
+    # Predict on all rows
+    exp_probs = models["exp"].predict_proba(X_exp_full)
+
+    # Take last row prediction
+    exp_p = exp_probs[-1, 1]
 
 
 
+    X_dir_full = prepare_features(feat_df, DIR_FEATURES)
 
-    X_exp = prepare_features(last_row, EXP_FEATURES)
-    print("X_exp shape:", np.array(X_exp).shape)
+    side_probs_all = models["side"].predict_proba(X_dir_full)
 
-    exp_p = models["exp"].predict_proba(X_exp)[0, 1]
+    side_probs = side_probs_all[-1]
 
-
-    X_dir = prepare_features(last_row, DIR_FEATURES)
-    side_probs = models["side"].predict_proba(X_dir)[0]
 
     p_down = side_probs[0]
     p_up = side_probs[1]
@@ -361,10 +365,10 @@ def run_cycle(kite, MODELS, tokens):
     feature_row["atr"] = last_row["atr"].iloc[0]
     feature_row["side"] = side
 
-    X_meta = pd.DataFrame([feature_row])[feature_cols]
+    X_meta_full = pd.DataFrame(feature_matrix)[feature_cols]
+    meta_probs = models["meta"].predict_proba(X_meta_full)
+    p_win = meta_probs[-1, 1]
 
-
-    p_win = models["meta"].predict_proba(X_meta)[0, 1]
     print("="*60)
     print(f"Time: {candle_time}")
     print(f"exp_p: {exp_p:.4f}")
