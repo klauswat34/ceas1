@@ -872,22 +872,20 @@ def build_features(df):
 
 def prepare_features(df, feats):
 
-    X = df[feats]
+    # Always keep as DataFrame
+    if isinstance(df, pd.Series):
+        df = df.to_frame().T
 
-    # Always force DataFrame
-    if isinstance(X, pd.Series):
-        X = X.to_frame().T
+    X = df.loc[:, feats].copy()
 
-    # Replace inf
     X = X.replace([np.inf, -np.inf], np.nan).fillna(0)
 
-    # FORCE 2D NUMPY ARRAY
-    X = np.asarray(X)
-
+    # Guarantee 2D shape
     if X.ndim == 1:
-        X = X.reshape(1, -1)
+        X = X.to_frame().T
 
     return X
+
 
 
 
