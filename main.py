@@ -277,7 +277,10 @@ def run_cycle(kite, MODELS, tokens):
         print("No candle")
         return
 
-    candle_time = candle["date"]
+    candle_time = candle["date"].iloc[0]
+
+
+
 
     # Prevent duplicate execution
     if LAST_EXECUTED_CANDLE == candle_time:
