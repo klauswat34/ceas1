@@ -280,6 +280,8 @@ def run_cycle(kite, MODELS, tokens):
         print("Already executed this candle")
         return
 
+
+
     LAST_EXECUTED_CANDLE = candle_time
 
     # Fetch equity cross-sectional features
@@ -306,6 +308,7 @@ def run_cycle(kite, MODELS, tokens):
     feat_df = build_features(GLOBAL_BUFFER)
 
     if feat_df.empty:
+        print("Feature DF empty")
         return
 
     last_row = feat_df.iloc[-1]
@@ -342,6 +345,13 @@ def run_cycle(kite, MODELS, tokens):
 
 
     p_win = models["meta"].predict_proba(X_meta)[0, 1]
+    print("="*60)
+    print(f"Time: {candle_time}")
+    print(f"exp_p: {exp_p:.4f}")
+    print(f"p_up: {p_up:.4f} | p_down: {p_down:.4f}")
+    print(f"p_win: {p_win:.4f}")
+    print("="*60)
+
 
 
     META_THRESH = 0.6  
