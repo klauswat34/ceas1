@@ -874,12 +874,21 @@ def prepare_features(df, feats):
 
     X = df[feats]
 
+    # Always force DataFrame
     if isinstance(X, pd.Series):
         X = X.to_frame().T
 
-    X = X.replace([np.inf, -np.inf], np.nan)
+    # Replace inf
+    X = X.replace([np.inf, -np.inf], np.nan).fillna(0)
 
-    return X.fillna(0)
+    # FORCE 2D NUMPY ARRAY
+    X = np.asarray(X)
+
+    if X.ndim == 1:
+        X = X.reshape(1, -1)
+
+    return X
+
 
 
 
