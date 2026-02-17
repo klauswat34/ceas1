@@ -230,6 +230,8 @@ def fetch_latest_nifty_candle(kite, token):
     last_row = df.iloc[-1]
 
     t = last_row["date"].time()
+    print("Last candle time:", last_row["date"])
+
 
     if t < datetime.strptime("09:15","%H:%M").time():
         return None
@@ -255,6 +257,8 @@ def fetch_latest_nifty_candle(kite, token):
 
 
 def run_cycle(kite, MODELS, tokens):
+    print("Entered run_cycle")
+
     models = MODELS
     nifty_token = tokens["NIFTY50"]
 
