@@ -281,15 +281,15 @@ def run_cycle(kite, MODELS, tokens):
     print(type(LAST_EXECUTED_CANDLE), type(candle_time))
 
 
-    if LAST_EXECUTED_CANDLE is not None:
-      if pd.Timestamp(LAST_EXECUTED_CANDLE) == pd.Timestamp(candle_time):
-        print("Already executed this candle")
-        return
+   # if LAST_EXECUTED_CANDLE is not None:
+   #   if pd.Timestamp(LAST_EXECUTED_CANDLE) == pd.Timestamp(candle_time):
+   #     print("Already executed this candle")
+   #     return
 
 
 
 
-    LAST_EXECUTED_CANDLE = candle_time
+  #  LAST_EXECUTED_CANDLE = candle_time
 
     # Fetch equity cross-sectional features
     eq_feats = fetch_equity_features(kite, MODELS["pca"], tokens)
