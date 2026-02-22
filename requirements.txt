@@ -1,8 +1,0 @@
-pandas
-numpy
-scikit-learn==1.8.0
-lightgbm==4.3.0
-kiteconnect
-pytz
-requests
-joblib
