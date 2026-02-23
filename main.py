@@ -16,7 +16,7 @@ import os
 import pytz
 
 
-VWAP_BASE = 1048261307.9499966
+VWAP_BASE = 1049015248.2833312
 
   # your last notebook cumulative value
 
