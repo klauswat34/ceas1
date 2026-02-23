@@ -865,6 +865,21 @@ def build_features(df):
   print("Last row NaN columns:")
   print(nan_cols)
 
+  print("\n--- DEBUG ROLLING WINDOW CHECK ---")
+  print("Non-NaN counts last 10 rows:")
+  print(df.tail(10)[[
+    "vwap_disp",
+    "vwap_tb_spread",
+    "ret_tb_spread",
+    "pct_flow_align",
+    "liquidity_breadth",
+   ]].notna().sum())
+  print("-----------------------------------\n")
+  print("Consecutive non-NaN in last 10 rows:")
+  print(df.tail(10)[[
+    "vwap_disp",
+       ]].notna())
+
   
 
 
