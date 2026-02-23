@@ -198,7 +198,7 @@ def fetch_latest_nifty_candle(kite, token):
     df["date"] = pd.to_datetime(df["date"])
     df = df.sort_values("date")
 
-    last_row = df.iloc[-2]
+    last_row = df.iloc[-1]
 
     t = last_row["date"].time()
 
@@ -212,9 +212,10 @@ def fetch_latest_nifty_candle(kite, token):
 
     df["date"] = pd.to_datetime(df["date"])
     df["date"] = df["date"].dt.tz_localize(None)
+    df["date"] = df["date"].dt.floor("5min")
 
     df = df.sort_values("date")
-    last_row = df.iloc[-2]
+    last_row = df.iloc[-1]
 
 
 
