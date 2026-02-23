@@ -1141,6 +1141,9 @@ def main():
     tokens = resolve_tokens(kite)
     MODELS = load_models()
     send_telegram("🟢 Railway bot started")
+    # Align to next 5-min boundary before starting engine
+    print("Aligning to next 5-min boundary...")
+    sleep_to_next_bar()
 
     while True:
         try:
