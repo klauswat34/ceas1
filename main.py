@@ -215,6 +215,11 @@ def fetch_latest_nifty_candle(kite, token):
     df["date"] = df["date"].dt.floor("5min")
 
     df = df.sort_values("date")
+    print("\n--- RAW CANDLES FROM KITE ---")
+    print(df[["date", "open", "high", "low", "close"]].tail(6))
+    print("Last 3 timestamps:", df["date"].tail(3).tolist())
+    print("Max timestamp in df:", df["date"].max())
+    print("-----------------------------\n")
     last_row = df.iloc[-1]
 
 
@@ -964,6 +969,10 @@ def fetch_equity_features(kite, pca,tokens):
             df = pd.DataFrame(candles)
             df["symbol"] = sym
             dfs.append(df)
+            print(f"\n--- {sym} LAST 3 RAW CANDLES ---")
+            print(df[["date", "open", "close"]].tail(3))
+            print("Max timestamp:", df["date"].max())
+            print("--------------------------------")
 
         time.sleep(0.03)
 
@@ -1069,6 +1078,10 @@ def fetch_equity_features(kite, pca,tokens):
     print("Feats shape AFTER dropna:", feats.shape)
     feats.index = feats.index.floor("5min")
     feats.index = feats.index.tz_localize(None)
+    print("\n--- FINAL EQ FEATS INDEX ---")
+    print("Tail:", feats.index.tail(5))
+    print("Max timestamp:", feats.index.max())
+    print("-----------------------------\n")
 
     return feats.tail(1)
 
