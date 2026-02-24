@@ -961,7 +961,7 @@ def fetch_equity_features(kite, pca, tokens, candle_time):
         candles = kite.historical_data(
             token,
             start,
-            now,
+            end_time,
             INTERVAL,
         )
 
