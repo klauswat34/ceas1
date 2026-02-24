@@ -980,6 +980,9 @@ def fetch_equity_features(kite, pca, tokens, candle_time):
     data["date"] = pd.to_datetime(data["date"])
     data["date"] = data["date"].dt.tz_localize(None)
     data = data[data["date"] <= candle_time]
+    print("\n--- SYMBOL COUNT PER TIMESTAMP ---")
+    print(data.groupby("date")["symbol"].nunique().tail())
+    print("-----------------------------------\n")
     print("\n--- SYMBOL ROW COUNTS ---")
     print(data.groupby("symbol").size().describe())
     print(data.groupby("symbol").size().head())
