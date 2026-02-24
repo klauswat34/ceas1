@@ -978,6 +978,10 @@ def fetch_equity_features(kite, pca,tokens):
 
     data = pd.concat(dfs)
     data["date"] = pd.to_datetime(data["date"])
+    print("\n--- SYMBOL ROW COUNTS ---")
+    print(data.groupby("symbol").size().describe())
+    print(data.groupby("symbol").size().head())
+    print("-------------------------\n")
 
     data = (
         data.sort_values(["symbol", "date"])
@@ -992,9 +996,18 @@ def fetch_equity_features(kite, pca,tokens):
         data.groupby("symbol")["volume"]
             .transform(lambda x: x.rolling(ADV_WINDOW, min_periods=5).mean())
     )
+    print("\n--- ADV DIAGNOSTIC ---")
+    print("Total rows:", len(data))
+    print("ADV NaN count:", data["adv"].isna().sum())
+    print("ADV non-NaN count:", data["adv"].notna().sum())
+    print("----------------------\n")
 
     data["adv"] = data["adv"].replace(0, np.nan)
     data["norm_vol"] = data["volume"] / data["adv"]
+    print("\n--- NORM_VOL DIAGNOSTIC ---")
+    print("norm_vol NaN count:", data["norm_vol"].isna().sum())
+    print("norm_vol non-NaN count:", data["norm_vol"].notna().sum())
+    print("---------------------------\n")
 
     data["ret"] = data.groupby("symbol")["close"].pct_change()
 
@@ -1065,7 +1078,9 @@ def fetch_equity_features(kite, pca,tokens):
         ],
         axis=1,
     )
-
+    print("\n--- EQ_NORM_VOLUME DIAG ---")
+    print(eq_norm_volume)
+    print("----------------------------\n")
     print("Raw feats shape before dropna:", feats.shape)
     print("NaN counts per column:")
     print(feats.isna().sum().sort_values(ascending=False).head(10))
