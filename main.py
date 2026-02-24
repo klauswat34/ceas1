@@ -948,7 +948,7 @@ feature_cols = list(dict.fromkeys(
 def fetch_equity_features(kite, pca,tokens):
 
     now = datetime.now(IST)
-    start = now - timedelta(minutes=20)
+    start = now - timedelta(minutes=125)
  #   start = now - timedelta(minutes=LOOKBACK_BARS * INTERVAL_MIN*2)
 
     dfs = []
