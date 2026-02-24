@@ -257,7 +257,7 @@ def run_cycle(kite, MODELS, tokens):
     LAST_EXECUTED_CANDLE = candle_time
 
     # Fetch equity cross-sectional features
-    eq_feats = fetch_equity_features(kite, MODELS["pca"], tokens)
+    eq_feats = fetch_equity_features(kite, MODELS["pca"], tokens, candle_time)
 
 
 
@@ -945,10 +945,10 @@ feature_cols = list(dict.fromkeys(
 ))
 
 
-def fetch_equity_features(kite, pca,tokens):
+def fetch_equity_features(kite, pca, tokens, candle_time):
 
-    now = datetime.now(IST)
-    start = now - timedelta(minutes=125)
+    end_time = candle_time
+    start = end_time - timedelta(minutes=125)
  #   start = now - timedelta(minutes=LOOKBACK_BARS * INTERVAL_MIN*2)
 
     dfs = []
@@ -978,6 +978,8 @@ def fetch_equity_features(kite, pca,tokens):
 
     data = pd.concat(dfs)
     data["date"] = pd.to_datetime(data["date"])
+    data["date"] = data["date"].dt.tz_localize(None)
+    data = data[data["date"] <= candle_time]
     print("\n--- SYMBOL ROW COUNTS ---")
     print(data.groupby("symbol").size().describe())
     print(data.groupby("symbol").size().head())
@@ -1092,7 +1094,10 @@ def fetch_equity_features(kite, pca,tokens):
     feats.index = feats.index.tz_localize(None)
 
 
-    return feats.tail(1)
+    if candle_time in feats.index:
+       return feats.loc[[candle_time]]
+    else:
+       return pd.DataFrame()
 
 
 
