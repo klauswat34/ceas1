@@ -1101,10 +1101,14 @@ def fetch_equity_features(kite, pca, tokens, candle_time):
     candle_time = pd.to_datetime(candle_time).floor("5min")
 
 
-    if candle_time in feats.index:
-       return feats.loc[[candle_time]]
-    else:
-       return pd.DataFrame()
+    valid_times = feats.index[feats.index <= candle_time]
+    if len(valid_times) == 0:
+       print("No valid equity timestamp")
+    return pd.DataFrame()
+    last_valid_time = valid_times.max()
+    if last_valid_time != candle_time:
+      print(f"⚠ Equity lag detected. Using {last_valid_time} instead of {candle_time}")
+    return feats.loc[[last_valid_time]]
 
 
 
