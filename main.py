@@ -947,7 +947,7 @@ feature_cols = list(dict.fromkeys(
 
 def fetch_equity_features(kite, pca, tokens, candle_time):
 
-    end_time = candle_time
+    end_time = candle_time + timedelta(minutes=1)
     start = end_time - timedelta(minutes=125)
  #   start = now - timedelta(minutes=LOOKBACK_BARS * INTERVAL_MIN*2)
 
