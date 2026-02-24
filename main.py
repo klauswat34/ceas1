@@ -170,7 +170,7 @@ def sleep_to_next_bar():
     time.sleep(max(1, sleep_seconds))
 
     # small buffer so Kite finalizes candle
-    time.sleep(35)
+    time.sleep(30)
 
 
 def fetch_latest_nifty_candle(kite, token):
@@ -948,8 +948,8 @@ feature_cols = list(dict.fromkeys(
 def fetch_equity_features(kite, pca,tokens):
 
     now = datetime.now(IST)
-#    start = now - timedelta(days=1)
-    start = now - timedelta(minutes=LOOKBACK_BARS * INTERVAL_MIN*2)
+    start = now - timedelta(minutes=20)
+ #   start = now - timedelta(minutes=LOOKBACK_BARS * INTERVAL_MIN*2)
 
     dfs = []
 
@@ -971,7 +971,7 @@ def fetch_equity_features(kite, pca,tokens):
             dfs.append(df)
 
 
-        time.sleep(0.03)
+        time.sleep(0.35)
 
     if not dfs:
         return pd.DataFrame()
