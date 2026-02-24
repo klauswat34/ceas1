@@ -977,8 +977,9 @@ def fetch_equity_features(kite, pca, tokens, candle_time):
         return pd.DataFrame()
 
     data = pd.concat(dfs)
-    data["date"] = pd.to_datetime(data["date"])
-    data["date"] = data["date"].dt.tz_localize(None)
+    data["date"] = pd.to_datetime(data["date"]).dt.tz_localize(None).dt.floor("5min")
+    candle_time = pd.to_datetime(candle_time).tz_localize(None).floor("5min")
+
     data = data[data["date"] <= candle_time]
     print("\n--- SYMBOL COUNT PER TIMESTAMP ---")
     print(data.groupby("date")["symbol"].nunique().tail())
@@ -1095,6 +1096,9 @@ def fetch_equity_features(kite, pca, tokens, candle_time):
     print("Feats shape AFTER dropna:", feats.shape)
     feats.index = feats.index.floor("5min")
     feats.index = feats.index.tz_localize(None)
+
+    feats.index = pd.to_datetime(feats.index).floor("5min")
+    candle_time = pd.to_datetime(candle_time).floor("5min")
 
 
     if candle_time in feats.index:
