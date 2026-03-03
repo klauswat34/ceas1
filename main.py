@@ -254,13 +254,15 @@ def run_cycle(kite, MODELS, tokens):
         return
 
     candle_time = candle["date"]
+    now = datetime.now(IST)
+    is_final_bar = (now.minute % 5 == 0) and now.second >= 2
 
     # Prevent duplicate execution
-    if LAST_EXECUTED_CANDLE == candle_time:
-        print("Already executed this candle")
-        return
-
-    LAST_EXECUTED_CANDLE = candle_time
+    if is_final_bar:
+       if LAST_EXECUTED_CANDLE == candle_time:
+           print("Already executed final candle")
+           return
+       LAST_EXECUTED_CANDLE = candle_time
 
     # Fetch equity cross-sectional features
     eq_feats = fetch_equity_features(kite, MODELS["pca"], tokens, candle_time)
@@ -299,11 +301,22 @@ def run_cycle(kite, MODELS, tokens):
     print("EQ feats index:", eq_feats.index)
     print(new_row.columns)
 
-    GLOBAL_BUFFER = (
-     pd.concat([GLOBAL_BUFFER, new_row])
-     .loc[lambda df: ~df.index.duplicated(keep="last")]
-     .sort_index()
-     .tail(MAX_ROWS))
+    if is_final_bar:
+      GLOBAL_BUFFER = (
+        pd.concat([GLOBAL_BUFFER, new_row])
+        .loc[lambda df: ~df.index.duplicated(keep="last")]
+        .sort_index()
+        .tail(MAX_ROWS)
+          )
+      source_df = GLOBAL_BUFFER
+      print("Permanent bar stored")
+    else:
+      source_df = (
+        pd.concat([GLOBAL_BUFFER, new_row])
+        .loc[lambda df: ~df.index.duplicated(keep="last")]
+        .sort_index()
+          )
+      print("Temporary bar used")
     # 🔥 FORCE TZ-NAIVE INDEX
 
     print("\n===== LAST 5 ROWS AFTER CONCAT =====")
@@ -324,7 +337,7 @@ def run_cycle(kite, MODELS, tokens):
         print("Not enough data")
         return
 
-    feat_df = build_features(GLOBAL_BUFFER)
+    feat_df = build_features(source_df)
 
 
 
@@ -385,8 +398,9 @@ def run_cycle(kite, MODELS, tokens):
      print("Meta rejected:", p_win)
      return
 
-    hi_ref = GLOBAL_BUFFER["nifty_high"].iloc[-LOOKBACK-1:-1].max()
-    lo_ref = GLOBAL_BUFFER["nifty_low"].iloc[-LOOKBACK-1:-1].min()
+    hist_df = GLOBAL_BUFFER
+    hi_ref = hist_df["nifty_high"].iloc[-LOOKBACK-1:-1].max()
+    lo_ref = hist_df["nifty_low"].iloc[-LOOKBACK-1:-1].min()
 
 
     entry = hi_ref if side == 1 else lo_ref
@@ -1387,11 +1401,11 @@ def main():
 
             if not market_open():
                 print("Market closed. Sleeping 60s.")
-                time.sleep(60)
+                time.sleep(600)
                 continue
 
             run_cycle(kite, MODELS, tokens)
-            sleep_to_next_bar()
+            time.sleep(30)
 
         except Exception:
             err = traceback.format_exc()
