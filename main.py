@@ -1405,7 +1405,11 @@ def main():
                 continue
 
             run_cycle(kite, MODELS, tokens)
-            time.sleep(30)
+
+            now = datetime.now(IST)
+            next_min = (now + timedelta(minutes=1)).replace(second=0, microsecond=0)
+            sleep_sec = (next_min - now).total_seconds()
+            time.sleep(max(0.5, sleep_sec + 0.01))
 
         except Exception:
             err = traceback.format_exc()
